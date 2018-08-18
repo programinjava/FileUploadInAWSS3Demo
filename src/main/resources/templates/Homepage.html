@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+<title>File Upload Example</title>
+<link href="webjars/bootstrap/3.3.7/css/bootstrap.min.css"
+	rel="stylesheet" />
+<script type="text/javascript" src="webjars/jquery/3.3.1/jquery.min.js"></script>
+<script src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	var _validFileExtensions = [ ".csv", ".zip" ,".png" ];
+	function Validate(oForm) {
+		var arrInputs = oForm.getElementsByTagName("input");
+		for (var i = 0; i < arrInputs.length; i++) {
+			var oInput = arrInputs[i];
+			if (oInput.type == "file") {
+				var sFileName = oInput.value;
+				if (sFileName.length == 0) {
+
+					alert("Please select a file to upload");
+					return false;
+				}
+				if (sFileName.length > 0) {
+					var blnValid = false;
+					for (var j = 0; j < _validFileExtensions.length; j++) {
+						var sCurExtension = _validFileExtensions[j];
+						if (sFileName.substr(
+								sFileName.length - sCurExtension.length,
+								sCurExtension.length).toLowerCase() == sCurExtension
+								.toLowerCase()) {
+							blnValid = true;
+							break;
+						}
+					}
+
+					if (!blnValid) {
+						alert("Invalid File Extension");
+						return false;
+					}
+				}
+			}
+		}
+
+		return true;
+	}
+		
+	/*]]>*/
+</script>
+
+<body>
+
+	<div class="container-fluid padding-0">
+		<div class="row padding-0">
+			
+			<div class="col-md-4">
+				<h2>File Upload Example</h2>
+			</div>
+			<div class="col-md-4" align="right"></div>
+		</div>
+	</div>
+	<nav role="navigation" id="trainingset-container-id"
+		class="navbar navbar-default">
+		<div class="row" style="margin-top: 10px;">
+			<div class="col-md-2">
+				<B>Upload File</B>
+			</div>
+			<div class="col-md-6">
+				<form method="POST" action="/upload"
+					onsubmit="return Validate(this);" enctype="multipart/form-data">
+					<div class="col-sm-6">
+
+						<input type="file" name="file"  />
+					</div>
+					<div class="col-sm-6">
+						<input type="submit" class="btn btn-success btn-sm" value="Upload data" />
+					</div>
+				</form>
+			</div>
+			
+		</div>
+	</nav>
+		<div id="messageboxid">
+			<div id="uploadstatus" th:if="${message}">
+				<B>Status Of Uploaded File</B>
+				<h6 th:text="${message}" />
+			</div>
+		</div>
+		
+</body>
+</html>
